@@ -25,12 +25,13 @@ public:
   #pragma endregion
 
   #pragma region Static Operations
-  template< typename IterTy >
-  static std::shared_ptr < TrieNode< charTy > > const Find( std::shared_ptr< TrieNode< charTy > > root, IterTy begin, IterTy end )
+  template< typename nodeTy, typename IterTy >
+  static std::shared_ptr < nodeTy > const Find( std::shared_ptr< nodeTy > root, IterTy begin, IterTy end )
   {
+    static_assert(std::is_base_of< TrieNode< charTy >, nodeTy >::value, "Must use a TrieNode type");
     if( root == nullptr )
     {
-      return std::shared_ptr< TrieNode< charTy > >();
+      return std::shared_ptr< nodeTy >();
     }
 
     auto curNode { root };
@@ -57,15 +58,16 @@ public:
       }
     }
 
-    return std::shared_ptr< TrieNode< charTy > >();
+    return std::shared_ptr< nodeTy >();
   }
 
-  template< typename IterTy >
-  static std::shared_ptr < TrieNode< charTy > > const Insert( std::shared_ptr< TrieNode< charTy > > root, IterTy begin, IterTy end )
+  template< typename nodeTy, typename IterTy >
+  static std::shared_ptr < nodeTy > const Insert( std::shared_ptr< nodeTy > root, IterTy begin, IterTy end )
   {
+    static_assert(std::is_base_of< TrieNode< charTy >, nodeTy >::value, "Must use a TrieNode type");
     if( root == nullptr || begin == end )
     {
-      return std::shared_ptr< TrieNode< charTy > >();
+      return std::shared_ptr< nodeTy >();
     }
 
     auto curNode { root };
@@ -76,7 +78,7 @@ public:
 
       if( curNode == nullptr )
       {
-        curNode = std::make_unique< TrieNode< charTy > >( *it );
+        curNode = std::make_unique< nodeTy >( *it );
         lastNode->m_children[*it] = curNode;
       }
       lastNode = curNode;
@@ -87,15 +89,16 @@ public:
     return lastNode;
   }
 
-  template< typename IterTy >
-  static std::shared_ptr < TrieNode< charTy > > const Remove( std::shared_ptr< TrieNode< charTy > > root, IterTy begin, IterTy end )
+  template< typename nodeTy, typename IterTy >
+  static std::shared_ptr < nodeTy > const Remove( std::shared_ptr< nodeTy > root, IterTy begin, IterTy end )
   {
+    static_assert(std::is_base_of< TrieNode< charTy >, nodeTy >::value, "Must use a TrieNode type");
     if( root == nullptr || begin == end )
     {
-      return std::shared_ptr< TrieNode< charTy > >();
+      return std::shared_ptr< nodeTy >();
     }
 
-    std::shared_ptr< TrieNode< charTy > > lastEntryEnd { root };
+    std::shared_ptr< nodeTy > lastEntryEnd { root };
     charTy nearestCharToLastEntryEnd { *begin };
 
     auto curNode { root };
@@ -134,7 +137,7 @@ public:
       }
     }
 
-    return std::shared_ptr< TrieNode< charTy > >();
+    return std::shared_ptr< nodeTy >();
   }
   #pragma endregion
 
