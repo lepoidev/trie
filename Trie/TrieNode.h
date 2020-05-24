@@ -16,7 +16,7 @@ class TrieNode
 public:
   #pragma region Constructors
   TrieNode( charTy charVal )
-    : m_char { charVal }, m_isEndOfAnEntry { false }
+    : m_char { charVal }, m_isEndOfAnEntry { false }, m_numChildren { 0ULL }
   {
     static_assert( std::is_integral< charTy >::value, "Must use an integral type for charTy" );
     m_children.resize( NumChars() );
@@ -79,7 +79,7 @@ public:
       if( curNode == nullptr )
       {
         curNode = std::make_shared< nodeTy >( *it );
-        lastNode->m_children[*it] = curNode;
+        lastNode->AddChild( curNode );
       }
       lastNode = curNode;
     }
@@ -119,9 +119,9 @@ public:
       if( curNode->m_isEndOfAnEntry && isLastChar && isSameChar )
       {
         curNode->m_isEndOfAnEntry = false;
-        if( curNode->CountChildren() == 0 )
+        if( curNode->GetNumChildren() == 0 )
         {
-          lastEntryEnd->m_children[nearestCharToLastEntryEnd].reset();
+          lastEntryEnd->RemoveChild( nearestCharToLastEntryEnd );
         }
         return lastEntryEnd;
       }
@@ -130,7 +130,7 @@ public:
         break;
       }
 
-      if( (curNode->m_isEndOfAnEntry || (curNode->CountChildren() > 1 ) ) && !isLastChar )
+      if( (curNode->m_isEndOfAnEntry || (curNode->GetNumChildren() > 1 ) ) && !isLastChar )
       {
         lastEntryEnd = curNode;
         nearestCharToLastEntryEnd = *nextIt;
@@ -149,25 +149,15 @@ public:
   }
   #pragma endregion
 
-  // temporary, will add a property for this
-  size_t const CountChildren() const
+  size_t const GetNumChildren() const
   {
-    size_t sum { 0 };
-    for( auto const& child : m_children )
-    {
-      if( child != nullptr )
-      {
-        ++sum;
-      }
-    }
-
-    return sum;
+    return m_numChildren;
   }
 
 protected:
   charTy m_char;
   bool m_isEndOfAnEntry;
-
+  size_t m_numChildren;
   std::vector< std::shared_ptr< TrieNode< charTy > > > m_children;
 
   static size_t const NumChars()
@@ -178,5 +168,19 @@ protected:
   std::shared_ptr< TrieNode< charTy > > GetChild( charTy const c )
   {
     return m_children[c];
+  }
+
+  template< typename nodeTy >
+  void AddChild( nodeTy const node )
+  {
+    auto const c { node->m_char };
+    m_children[c] = node;
+    ++m_numChildren;
+  }
+
+  void RemoveChild( charTy const c )
+  {
+    m_children[c].reset();
+    --m_numChildren;
   }
 };

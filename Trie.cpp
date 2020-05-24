@@ -152,7 +152,7 @@ bool TestRemove()
   }
 
   // no more items in the Trie
-  TrieTestAssert( lastNode->CountChildren() == 0 );
+  TrieTestAssert( lastNode->GetNumChildren() == 0 );
 
   return true;
 }
