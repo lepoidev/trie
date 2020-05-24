@@ -17,8 +17,8 @@ public:
   }
 
   template< typename IterTy >
-  std::shared_ptr< DataTrieNode< charTy, dataTy > > const Insert( IterTy begin, IterTy end, dataTy data )
+  std::shared_ptr< DataTrieNode< charTy, dataTy > > const Insert( IterTy&& begin, IterTy&& end, dataTy data )
   {
-    return DataTrieNode< charTy, dataTy >::Insert( this->m_root, begin, end, data );
+    return DataTrieNode< charTy, dataTy >::Insert( this->m_root, std::forward< IterTy >( begin ), std::forward< IterTy >( end ), data );
   }
 };

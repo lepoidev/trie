@@ -46,7 +46,7 @@ public:
   template< typename nodeTy, typename IterTy, typename dataTy >
   static std::shared_ptr < nodeTy > const Insert( std::shared_ptr< nodeTy > const& root, IterTy&& begin, IterTy&& end, dataTy&& data )
   {
-    auto& node { __super::Insert( root, begin, end ) };
+    auto& node { __super::Insert( root, std::forward< IterTy >( begin ), std::forward< IterTy >( end ) ) };
     node->SetData( data );
     return node;
   }

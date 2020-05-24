@@ -144,7 +144,7 @@ public:
   static bool const HasString( std::shared_ptr< nodeTy > const& root, IterTy&& begin, IterTy&& end )
   {
     static_assert( std::is_base_of< TrieNode< charTy >, nodeTy >::value, "Must use a TrieNode type" );
-    auto& node { Find( root, begin, end ) };
+    auto& node { Find( root, std::forward< IterTy >( begin ), std::forward< IterTy >( end ) ) };
     return node != nullptr;
   }
   #pragma endregion
