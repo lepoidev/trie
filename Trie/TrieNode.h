@@ -145,7 +145,7 @@ public:
   {
     static_assert( std::is_base_of< TrieNode< charTy >, nodeTy >::value, "Must use a TrieNode type" );
     auto& node { Find( root, begin, end ) };
-    return node == nullptr;
+    return node != nullptr;
   }
   #pragma endregion
 

@@ -157,11 +157,52 @@ bool TestRemove()
   return true;
 }
 
+template< typename trieTy >
+bool TestHasString()
+{
+  trieTy trie;
+  TrieTestAssert( Populate( trie ) );
+
+  for( auto& str : testData )
+  {
+    TrieTestAssert( trie.HasString( str ) );
+  }
+
+  for( auto& str : nonExistantData )
+  {
+    TrieTestAssert( !trie.HasString( str ) );
+  }
+
+  return true;
+}
+
+template< typename trieTy >
+bool TestNumChildren()
+{
+  trieTy trie;
+
+  TrieTestAssert( Populate( trie ) );
+
+  auto node { trie.Find( "in" ) };
+  TrieTestAssert( node->GetNumChildren() == 1 );
+
+  auto newNode { trie.Insert( "into" ) };
+  TrieTestAssert( newNode->GetNumChildren() == 0 );
+  TrieTestAssert( node->GetNumChildren() == 2 );
+
+  auto trimPoint { trie.Remove( "inn" ) };
+  TrieTestAssert( trimPoint == node );
+  TrieTestAssert( node->GetNumChildren() == 1 );
+
+  return true;
+}
+
 bool TestDataTrieInsert()
 {
   DataTrie< char, std::basic_string< char > > dataTrie;
 
   TrieTestAssert( Populate( dataTrie ) );
+
   for( auto& str : testData )
   {
     auto const& node { dataTrie.Find( str ) };
@@ -178,9 +219,13 @@ bool RunAllTests()
     TestInsert< Trie< char > >,
     TestFind< Trie< char > >,
     TestRemove< Trie< char > >,
+    TestHasString< Trie< char > >,
+    TestNumChildren< Trie< char > >,
     TestInsert< DataTrie< char, std::basic_string< char > > >,
     TestFind< DataTrie< char, std::basic_string< char > > >,
     TestRemove< DataTrie< char, std::basic_string< char > > >,
+    TestHasString< DataTrie< char, std::basic_string< char > > >,
+    TestNumChildren< DataTrie< char, std::basic_string< char > > >,
     TestDataTrieInsert
   };
 
