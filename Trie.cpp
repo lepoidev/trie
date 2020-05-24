@@ -68,10 +68,10 @@ bool Populate( DataTrie< char, std::string > & trie )
 #pragma endregion
 
 #pragma region Test Functions
-template< typename trieTy >
+template< typename TrieTy >
 bool TestInsert()
 {
-  trieTy trie;
+  TrieTy trie;
 
   TrieTestAssert( Populate( trie ) );
 
@@ -98,10 +98,10 @@ bool TestInsert()
   return true;
 }
 
-template< typename trieTy >
+template< typename TrieTy >
 bool TestFind()
 {
-  trieTy trie;
+  TrieTy trie;
 
   // insert and test if strings were inserted
   TrieTestAssert( Populate( trie ) );
@@ -119,10 +119,10 @@ bool TestFind()
   return true;
 }
 
-template< typename trieTy > 
+template< typename TrieTy > 
 bool TestRemove()
 {
-  trieTy trie;
+  TrieTy trie;
 
   TrieTestAssert( Populate( trie ) );
 
@@ -160,10 +160,10 @@ bool TestRemove()
   return true;
 }
 
-template< typename trieTy >
+template< typename TrieTy >
 bool TestHasString()
 {
-  trieTy trie;
+  TrieTy trie;
   TrieTestAssert( Populate( trie ) );
 
   for( auto& str : testData )
@@ -179,10 +179,10 @@ bool TestHasString()
   return true;
 }
 
-template< typename trieTy >
+template< typename TrieTy >
 bool TestNumChildren()
 {
-  trieTy trie;
+  TrieTy trie;
 
   TrieTestAssert( Populate( trie ) );
 
@@ -218,10 +218,10 @@ bool TestDataTrieInsert()
   return true;
 }
 
-template< typename trieTy >
+template< typename TrieTy >
 bool TestGetAllStrings()
 {
-  trieTy trie;
+  TrieTy trie;
 
   TrieTestAssert( Populate( trie ) );
 

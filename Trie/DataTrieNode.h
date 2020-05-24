@@ -1,21 +1,21 @@
 #pragma once
 #include "TrieNode.h"
 
-template< typename charTy, typename dataTy >
-class DataTrieNode : public TrieNode< charTy >
+template< typename CharTy, typename dataTy >
+class DataTrieNode : public TrieNode< CharTy >
 {
 public:
   #pragma region Constructors
-  DataTrieNode( charTy const charVal, dataTy const data )
+  DataTrieNode( CharTy const charVal, dataTy const data )
     : DataTrieNode( charVal ), m_data { data }
   {
 
   }
 
-  DataTrieNode( charTy const charVal )
-    : TrieNode< charTy >( charVal ), m_data {}
+  DataTrieNode( CharTy const charVal )
+    : TrieNode< CharTy >( charVal ), m_data {}
   {
-    static_assert( !std::is_same< charTy, dataTy >::value, "Cannot use same type for data as char." );
+    static_assert( !std::is_same< CharTy, dataTy >::value, "Cannot use same type for data as char." );
   }
 
   DataTrieNode( dataTy const data )
@@ -25,7 +25,7 @@ public:
   }
 
   DataTrieNode()
-    : DataTrieNode( (charTy)0 )
+    : DataTrieNode( (CharTy)0 )
   {
 
   }
@@ -43,8 +43,8 @@ public:
   #pragma endregion
 
   #pragma region Static Operations
-  template< typename nodeTy, typename IterTy, typename dataTy >
-  static std::shared_ptr < nodeTy > const Insert( std::shared_ptr< nodeTy > const& root, IterTy&& begin, IterTy&& end, dataTy&& data )
+  template< typename NodeTy, typename IterTy, typename dataTy >
+  static std::shared_ptr < NodeTy > const Insert( std::shared_ptr< NodeTy > const& root, IterTy&& begin, IterTy&& end, dataTy&& data )
   {
     auto& node { __super::Insert( root, std::forward< IterTy >( begin ), std::forward< IterTy >( end ) ) };
     node->SetData( data );
