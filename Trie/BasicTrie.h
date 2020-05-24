@@ -17,7 +17,7 @@ public:
   }
 
   template< typename IterTy >
-  std::shared_ptr< nodeTy > const Insert( IterTy begin, IterTy end )
+  std::shared_ptr< nodeTy > const Insert( IterTy&& begin, IterTy&& end )
   {
     return nodeTy::Insert( m_root, begin, end );
   }
@@ -28,7 +28,7 @@ public:
   }
 
   template< typename IterTy >
-  std::shared_ptr< nodeTy > const Remove( IterTy begin, IterTy end )
+  std::shared_ptr< nodeTy > const Remove( IterTy&& begin, IterTy&& end )
   {
     return nodeTy::Remove( m_root, begin, end );
   }
@@ -39,7 +39,7 @@ public:
   }
 
   template< typename IterTy >
-  std::shared_ptr< nodeTy > const Find( IterTy begin, IterTy end ) const
+  std::shared_ptr< nodeTy > const Find( IterTy&& begin, IterTy&& end ) const
   {
     return nodeTy::Find( m_root, begin, end );
   }
@@ -50,7 +50,7 @@ public:
   }
 
   template< typename IterTy >
-  bool const HasString( IterTy begin, IterTy end ) const
+  bool const HasString( IterTy&& begin, IterTy&& end ) const
   {
     return nodeTy::HasString( m_root, begin, end );
   }

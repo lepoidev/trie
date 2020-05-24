@@ -15,7 +15,7 @@ class TrieNode
 {
 public:
   #pragma region Constructors
-  TrieNode( charTy charVal )
+  TrieNode( charTy const charVal )
     : m_char { charVal }, m_isEndOfAnEntry { false }, m_numChildren { 0ULL }
   {
     static_assert( std::is_integral< charTy >::value, "Must use an integral type for charTy" );
@@ -26,9 +26,9 @@ public:
 
   #pragma region Static Operations
   template< typename nodeTy, typename IterTy >
-  static std::shared_ptr < nodeTy > const Find( std::shared_ptr< nodeTy > root, IterTy begin, IterTy end )
+  static std::shared_ptr < nodeTy > const Find( std::shared_ptr< nodeTy > const& root, IterTy&& begin, IterTy&& end )
   {
-    static_assert(std::is_base_of< TrieNode< charTy >, nodeTy >::value, "Must use a TrieNode type");
+    static_assert( std::is_base_of< TrieNode< charTy >, nodeTy >::value, "Must use a TrieNode type" );
     if( root == nullptr )
     {
       return std::shared_ptr< nodeTy >();
@@ -37,7 +37,7 @@ public:
     auto curNode { root };
     for( IterTy it { begin }; it != end; ++it )
     {
-      curNode = std::static_pointer_cast<nodeTy>( curNode->GetChild( *it ) );
+      curNode = std::static_pointer_cast< nodeTy >( curNode->GetChild( *it ) );
       if( curNode == nullptr )
       {
         break;
@@ -62,9 +62,9 @@ public:
   }
 
   template< typename nodeTy, typename IterTy >
-  static std::shared_ptr < nodeTy > const Insert( std::shared_ptr< nodeTy > root, IterTy begin, IterTy end )
+  static std::shared_ptr < nodeTy > const Insert( std::shared_ptr< nodeTy > const& root, IterTy&& begin, IterTy&& end )
   {
-    static_assert(std::is_base_of< TrieNode< charTy >, nodeTy >::value, "Must use a TrieNode type");
+    static_assert( std::is_base_of< TrieNode< charTy >, nodeTy >::value, "Must use a TrieNode type" );
     if( root == nullptr || begin == end )
     {
       return std::shared_ptr< nodeTy >();
@@ -90,7 +90,7 @@ public:
   }
 
   template< typename nodeTy, typename IterTy >
-  static std::shared_ptr < nodeTy > const Remove( std::shared_ptr< nodeTy > root, IterTy begin, IterTy end )
+  static std::shared_ptr < nodeTy > const Remove( std::shared_ptr< nodeTy > const& root, IterTy&& begin, IterTy&& end )
   {
     static_assert(std::is_base_of< TrieNode< charTy >, nodeTy >::value, "Must use a TrieNode type");
     if( root == nullptr || begin == end )
@@ -104,7 +104,7 @@ public:
     auto curNode { root };
     for( IterTy it { begin }; it != end; ++it )
     {
-      curNode = std::static_pointer_cast<nodeTy>( curNode->GetChild( *it ) );
+      curNode = std::static_pointer_cast< nodeTy >( curNode->GetChild( *it ) );
       if( curNode == nullptr )
       {
         break;
@@ -141,7 +141,7 @@ public:
   }
 
   template< typename nodeTy, typename IterTy >
-  static bool const HasString( std::shared_ptr< nodeTy > root, IterTy begin, IterTy end )
+  static bool const HasString( std::shared_ptr< nodeTy > const& root, IterTy&& begin, IterTy&& end )
   {
     static_assert( std::is_base_of< TrieNode< charTy >, nodeTy >::value, "Must use a TrieNode type" );
     auto& node { Find( root, begin, end ) };
@@ -165,13 +165,13 @@ protected:
     return 1ULL << 8ULL * sizeof( charTy );
   }
 
-  std::shared_ptr< TrieNode< charTy > > GetChild( charTy const c )
+  std::shared_ptr< TrieNode< charTy > >& GetChild( charTy const c )
   {
     return m_children[c];
   }
 
   template< typename nodeTy >
-  void AddChild( nodeTy const node )
+  void AddChild( nodeTy const& node )
   {
     auto const c { node->m_char };
     m_children[c] = node;

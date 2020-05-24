@@ -183,15 +183,18 @@ bool TestNumChildren()
 
   TrieTestAssert( Populate( trie ) );
 
-  auto node { trie.Find( "in" ) };
+  auto const& node { trie.Find( "in" ) };
   TrieTestAssert( node->GetNumChildren() == 1 );
 
-  auto newNode { trie.Insert( "into" ) };
+  auto const& newNode { trie.Insert( "into" ) };
   TrieTestAssert( newNode->GetNumChildren() == 0 );
   TrieTestAssert( node->GetNumChildren() == 2 );
 
-  auto trimPoint { trie.Remove( "inn" ) };
+  auto const& trimPoint { trie.Remove( "inn" ) };
   TrieTestAssert( trimPoint == node );
+  TrieTestAssert( node->GetNumChildren() == 1 );
+
+  auto const& unrelated { trie.Insert( "intone" ) };
   TrieTestAssert( node->GetNumChildren() == 1 );
 
   return true;
@@ -214,7 +217,7 @@ bool TestDataTrieInsert()
 
 bool RunAllTests()
 {
-  static std::vector<TestFn> tests
+  static std::vector< TestFn > tests
   {
     TestInsert< Trie< char > >,
     TestFind< Trie< char > >,

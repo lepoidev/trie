@@ -6,19 +6,19 @@ class DataTrieNode : public TrieNode< charTy >
 {
 public:
   #pragma region Constructors
-  DataTrieNode( charTy charVal, dataTy data )
+  DataTrieNode( charTy const charVal, dataTy const data )
     : DataTrieNode( charVal ), m_data { data }
   {
 
   }
 
-  DataTrieNode( charTy charVal )
+  DataTrieNode( charTy const charVal )
     : TrieNode< charTy >( charVal ), m_data {}
   {
     static_assert( !std::is_same< charTy, dataTy >::value, "Cannot use same type for data as char." );
   }
 
-  DataTrieNode( dataTy data )
+  DataTrieNode( dataTy const data )
     : DataTrieNode(), m_data { data }
   {
 
@@ -44,7 +44,7 @@ public:
 
   #pragma region Static Operations
   template< typename nodeTy, typename IterTy, typename dataTy >
-  static std::shared_ptr < nodeTy > const Insert( std::shared_ptr< nodeTy > root, IterTy begin, IterTy end, dataTy data )
+  static std::shared_ptr < nodeTy > const Insert( std::shared_ptr< nodeTy > const& root, IterTy&& begin, IterTy&& end, dataTy&& data )
   {
     auto& node { __super::Insert( root, begin, end ) };
     node->SetData( data );
