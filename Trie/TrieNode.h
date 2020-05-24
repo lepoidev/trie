@@ -139,6 +139,14 @@ public:
 
     return std::shared_ptr< nodeTy >();
   }
+
+  template< typename nodeTy, typename IterTy >
+  static bool const HasString( std::shared_ptr< nodeTy > root, IterTy begin, IterTy end )
+  {
+    static_assert( std::is_base_of< TrieNode< charTy >, nodeTy >::value, "Must use a TrieNode type" );
+    auto& node { Find( root, begin, end ) };
+    return node == nullptr;
+  }
   #pragma endregion
 
   // temporary, will add a property for this

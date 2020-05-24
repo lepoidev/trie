@@ -140,7 +140,7 @@ bool TestRemove()
   // verify only the new data exists
   for( auto& str : nonExistantData )
   {
-    auto const node { trie.Find( str ) };
+    auto const& node { trie.Find( str ) };
     TrieTestAssert( node != nullptr );
   }
 

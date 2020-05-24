@@ -11,7 +11,6 @@ public:
     static_assert( std::is_base_of< TrieNode< charTy >, nodeTy >::value, "Must use a TrieNode type" );
   }
 
-
   std::shared_ptr< nodeTy > const Insert( std::basic_string< charTy > str )
   {
     return nodeTy::Insert( m_root, str.begin(), str.end() );
@@ -43,6 +42,17 @@ public:
   std::shared_ptr< nodeTy > const Find( IterTy begin, IterTy end ) const
   {
     return nodeTy::Find( m_root, begin, end );
+  }
+
+  bool const HasString( std::basic_string< charTy > str ) const
+  {
+    return HasString( str.begin(), str.end() );
+  }
+
+  template< typename IterTy >
+  bool const HasString( IterTy begin, IterTy end ) const
+  {
+    return nodeTy::HasString( m_root, begin, end );
   }
 
 protected:
