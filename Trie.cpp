@@ -49,12 +49,29 @@ bool Populate( Trie< char >& trie )
 
   return true;
 }
+
+bool Populate( DataTrie< char, std::string > & trie )
+{
+  for( auto& str : testData )
+  {
+    trie.Insert( str.begin(), str.end(), str );
+  }
+
+  for( auto& str : testData )
+  {
+    auto node { trie.Find( str.begin(), str.end() ) };
+    TrieTestAssert( node != nullptr );
+  }
+
+  return true;
+}
 #pragma endregion
 
 #pragma region Test Functions
+template< typename trieTy >
 bool TestInsert()
 {
-  Trie< char > trie;
+  trieTy trie;
 
   TrieTestAssert( Populate( trie ) );
 
@@ -81,9 +98,10 @@ bool TestInsert()
   return true;
 }
 
+template< typename trieTy >
 bool TestFind()
 {
-  Trie< char > trie;
+  trieTy trie;
 
   // insert and test if strings were inserted
   TrieTestAssert( Populate( trie ) );
@@ -98,9 +116,10 @@ bool TestFind()
   return true;
 }
 
+template< typename trieTy > 
 bool TestRemove()
 {
-  Trie< char > trie;
+  trieTy trie;
 
   TrieTestAssert( Populate( trie ) );
 
@@ -138,13 +157,31 @@ bool TestRemove()
   return true;
 }
 
+bool TestDataTrieInsert()
+{
+  DataTrie< char, std::basic_string< char > > dataTrie;
+
+  TrieTestAssert( Populate( dataTrie ) );
+  for( auto& str : testData )
+  {
+    auto const& node { dataTrie.Find( str ) };
+    TrieTestAssert( node->GetData() == str );
+  }
+
+  return true;
+}
+
 bool RunAllTests()
 {
   static std::vector<TestFn> tests
   {
-    TestInsert,
-    TestFind,
-    TestRemove
+    TestInsert< Trie< char > >,
+    TestFind< Trie< char > >,
+    TestRemove< Trie< char > >,
+    TestInsert< DataTrie< char, std::basic_string< char > > >,
+    TestFind< DataTrie< char, std::basic_string< char > > >,
+    TestRemove< DataTrie< char, std::basic_string< char > > >,
+    TestDataTrieInsert
   };
 
   return std::all_of( tests.begin(), tests.end(), []( auto test )

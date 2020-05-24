@@ -16,9 +16,9 @@ class TrieNode
 public:
   #pragma region Constructors
   TrieNode( charTy charVal )
-    : m_char { charVal }
+    : m_char { charVal }, m_isEndOfAnEntry { false }
   {
-    //static_assert( std::is_integral< charTy >::value, "Must use an integral type for charTy" );
+    static_assert( std::is_integral< charTy >::value, "Must use an integral type for charTy" );
     m_children.resize( NumChars() );
   }
   TrieNode() : TrieNode( (charTy)0 ) {}
@@ -37,7 +37,7 @@ public:
     auto curNode { root };
     for( IterTy it { begin }; it != end; ++it )
     {
-      curNode = curNode->m_children[*it];
+      curNode = std::static_pointer_cast<nodeTy>( curNode->GetChild( *it ) );
       if( curNode == nullptr )
       {
         break;
@@ -74,11 +74,11 @@ public:
     auto lastNode { root };
     for( IterTy it { begin }; it != end; ++it )
     {
-      curNode = curNode->m_children[*it];
+      curNode = std::static_pointer_cast< nodeTy >( curNode->GetChild( *it ) );
 
       if( curNode == nullptr )
       {
-        curNode = std::make_unique< nodeTy >( *it );
+        curNode = std::make_shared< nodeTy >( *it );
         lastNode->m_children[*it] = curNode;
       }
       lastNode = curNode;
@@ -104,7 +104,7 @@ public:
     auto curNode { root };
     for( IterTy it { begin }; it != end; ++it )
     {
-      curNode = curNode->m_children[*it];
+      curNode = std::static_pointer_cast<nodeTy>( curNode->GetChild( *it ) );
       if( curNode == nullptr )
       {
         break;
@@ -161,8 +161,14 @@ protected:
   bool m_isEndOfAnEntry;
 
   std::vector< std::shared_ptr< TrieNode< charTy > > > m_children;
+
   static size_t const NumChars()
   {
     return 1ULL << 8ULL * sizeof( charTy );
+  }
+
+  std::shared_ptr< TrieNode< charTy > > GetChild( charTy const c )
+  {
+    return m_children[c];
   }
 };
