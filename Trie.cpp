@@ -113,6 +113,9 @@ bool TestFind()
     TrieTestAssert( node == nullptr );
   }
 
+  auto const& node { trie.Find( "\0" ) };
+  TrieTestAssert( node == nullptr );
+
   return true;
 }
 
