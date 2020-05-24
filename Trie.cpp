@@ -215,6 +215,32 @@ bool TestDataTrieInsert()
   return true;
 }
 
+template< typename trieTy >
+bool TestGetAllStrings()
+{
+  trieTy trie;
+
+  TrieTestAssert( Populate( trie ) );
+
+  auto actualStrings { trie.GetAllStrings() };
+  auto expectedStrings { testData };
+
+  std::sort( actualStrings.begin(), actualStrings.end() );
+  std::sort( expectedStrings.begin(), expectedStrings.end() );
+
+  for( auto const& str : actualStrings )
+  {
+    TrieTestAssert( std::binary_search( expectedStrings.begin(), expectedStrings.end(), str ) );
+  }
+
+  for( auto const& str : expectedStrings )
+  {
+    TrieTestAssert( std::binary_search( actualStrings.begin(), actualStrings.end(), str ) );
+  }
+
+  return true;
+}
+
 bool RunAllTests()
 {
   static std::vector< TestFn > tests
@@ -224,11 +250,13 @@ bool RunAllTests()
     TestRemove< Trie< char > >,
     TestHasString< Trie< char > >,
     TestNumChildren< Trie< char > >,
+    TestGetAllStrings< Trie< char > >,
     TestInsert< DataTrie< char, std::basic_string< char > > >,
     TestFind< DataTrie< char, std::basic_string< char > > >,
     TestRemove< DataTrie< char, std::basic_string< char > > >,
     TestHasString< DataTrie< char, std::basic_string< char > > >,
     TestNumChildren< DataTrie< char, std::basic_string< char > > >,
+    TestGetAllStrings< DataTrie< char, std::basic_string< char > > >,
     TestDataTrieInsert
   };
 

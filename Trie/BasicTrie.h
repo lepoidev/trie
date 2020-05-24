@@ -55,6 +55,18 @@ public:
     return nodeTy::HasString( m_root, std::forward< IterTy >( begin ), std::forward< IterTy >( end ) );
   }
 
+  void GetAllStrings( std::vector< std::basic_string< charTy > >& strings )
+  {
+    nodeTy::GetAllStrings( m_root, strings );
+  }
+
+  std::vector< std::basic_string< charTy > > const GetAllStrings()
+  {
+    std::vector< std::basic_string< charTy > > strings;
+    GetAllStrings( strings );
+    return strings;
+  }
+
 protected:
   std::shared_ptr< nodeTy > m_root;
 };

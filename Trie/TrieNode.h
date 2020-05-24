@@ -147,6 +147,21 @@ public:
     auto& node { Find( root, std::forward< IterTy >( begin ), std::forward< IterTy >( end ) ) };
     return node != nullptr;
   }
+
+  template< typename nodeTy >
+  static void GetAllStrings( std::shared_ptr< nodeTy > const& root, std::vector< std::basic_string< charTy > >& strings )
+  {
+    static_assert( std::is_base_of< TrieNode< charTy >, nodeTy >::value, "Must use a TrieNode type" );
+
+    std::basic_string< charTy > intialStr {};
+    for( auto const& child : root->m_children )
+    {
+      if( child != nullptr )
+      {
+        GetAllStrings( child, intialStr, strings );
+      }
+    }
+  }
   #pragma endregion
 
   size_t const GetNumChildren() const
@@ -182,5 +197,25 @@ protected:
   {
     m_children[c].reset();
     --m_numChildren;
+  }
+
+  template< typename nodeTy >
+  static void GetAllStrings( std::shared_ptr< nodeTy > const& root, std::basic_string< charTy > strToRoot, std::vector< std::basic_string< charTy > >& strings )
+  {
+    static_assert( std::is_base_of< TrieNode< charTy >, nodeTy >::value, "Must use a TrieNode type" );
+
+    auto strToCurrent { strToRoot + root->m_char };
+    if( root->m_isEndOfAnEntry )
+    {
+      strings.push_back( strToCurrent );
+    }
+
+    for( auto const& child : root->m_children )
+    {
+      if( child != nullptr )
+      {
+        GetAllStrings( child, strToCurrent, strings );
+      }
+    }
   }
 };
