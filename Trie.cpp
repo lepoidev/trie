@@ -30,10 +30,24 @@ static std::vector< std::basic_string< char > > const nonExistantData
 
 #pragma region Helpers
 
-#define TrieTestAssert( x ) { bool cond { x };\
-                              assert( cond );\
-                              if( !( cond ) ) return false;\
+#define TrieTestAssert( x ) {\
+                               bool cond { x };\
+                               assert( cond );\
+                               if( !( cond ) ) return false;\
                             }
+
+#define TrieTestBegin auto succeeded { true };
+
+#define TrieTestRun( f ) {\
+                            bool passed { f() };\
+                            if( !passed )\
+                            {\
+                              std::cout << "failed running function:" #f "\n";\
+                              succeeded = false;\
+                            }\
+                         }
+
+#define TrieTestEnd return succeeded;
 
 bool Populate( Trie< char >& trie )
 {
@@ -292,29 +306,23 @@ bool TestGetAllStringsWithNodes()
 
 bool RunAllTests()
 {
-  static std::vector< TestFn > tests
-  {
-    TestInsert< Trie< char > >,
-    TestFind< Trie< char > >,
-    TestRemove< Trie< char > >,
-    TestHasString< Trie< char > >,
-    TestNumChildren< Trie< char > >,
-    TestGetAllStrings< Trie< char > >,
-    TestGetAllStringsWithNodes< Trie< char > >,
-    TestInsert< DataTrie< char, std::basic_string< char > > >,
-    TestFind< DataTrie< char, std::basic_string< char > > >,
-    TestRemove< DataTrie< char, std::basic_string< char > > >,
-    TestHasString< DataTrie< char, std::basic_string< char > > >,
-    TestNumChildren< DataTrie< char, std::basic_string< char > > >,
-    TestGetAllStrings< DataTrie< char, std::basic_string< char > > >,
-    TestGetAllStringsWithNodes< DataTrie< char, std::basic_string< char > > >,
-    TestDataTrieInsert
-  };
-
-  return std::all_of( tests.begin(), tests.end(), []( auto test )
-  {
-    return test();
-  } );
+  TrieTestBegin;
+  TrieTestRun( ( TestInsert< Trie< char > > ) );
+  TrieTestRun( ( TestFind< Trie< char > > ) );
+  TrieTestRun( ( TestRemove< Trie< char > > ) );
+  TrieTestRun( ( TestHasString< Trie< char > > ) );
+  TrieTestRun( ( TestNumChildren< Trie< char > > ) );
+  TrieTestRun( ( TestGetAllStrings< Trie< char > > ) );
+  TrieTestRun( ( TestGetAllStringsWithNodes< Trie< char > > ) );
+  TrieTestRun( ( TestInsert< DataTrie< char, std::basic_string< char > > > ) );
+  TrieTestRun( ( TestFind< DataTrie< char, std::basic_string< char > > > ) );
+  TrieTestRun( ( TestRemove< DataTrie< char, std::basic_string< char > > > ) );
+  TrieTestRun( ( TestHasString< DataTrie< char, std::basic_string< char > > > ) );
+  TrieTestRun( ( TestNumChildren< DataTrie< char, std::basic_string< char > > > ) );
+  TrieTestRun( ( TestGetAllStrings< DataTrie< char, std::basic_string< char > > > ) );
+  TrieTestRun( ( TestGetAllStringsWithNodes< DataTrie< char, std::basic_string< char > > > ) );
+  TrieTestRun( ( TestDataTrieInsert ) );
+  TrieTestEnd;
 }
 #pragma endregion
 
