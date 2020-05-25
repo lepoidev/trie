@@ -53,18 +53,20 @@ static std::vector< std::basic_string< char > > const nonExistantData
                                if( !( cond ) ) return false;\
                             }
 
-#define TrieTestBegin auto succeeded { true };
+static TestFn const WrapTrieTest( TestFn const& fn, std::basic_string< char > const fname )
+{
+  return [=]()
+  {
+    auto passed { fn() };
+    if( !passed )
+    {
+      std::cout << "failed running function:" + fname + "\n";
+    }
+    return passed;
+  };
+}
 
-#define TrieTestRun( f ) {\
-                            bool passed { f() };\
-                            if( !passed )\
-                            {\
-                              std::cout << "failed running function:" #f "\n";\
-                              succeeded = false;\
-                            }\
-                         }
-
-#define TrieTestEnd return succeeded;
+#define WrapTrieTest( f ) WrapTrieTest( f, #f )
 
 bool Populate( Trie< char >& trie )
 {
@@ -323,23 +325,29 @@ bool TestGetAllStringsWithNodes()
 
 bool RunAllTests()
 {
-  TrieTestBegin;
-  TrieTestRun( ( TestInsert< Trie< char > > ) );
-  TrieTestRun( ( TestFind< Trie< char > > ) );
-  TrieTestRun( ( TestRemove< Trie< char > > ) );
-  TrieTestRun( ( TestHasString< Trie< char > > ) );
-  TrieTestRun( ( TestNumChildren< Trie< char > > ) );
-  TrieTestRun( ( TestGetAllStrings< Trie< char > > ) );
-  TrieTestRun( ( TestGetAllStringsWithNodes< Trie< char > > ) );
-  TrieTestRun( ( TestInsert< DataTrie< char, std::basic_string< char > > > ) );
-  TrieTestRun( ( TestFind< DataTrie< char, std::basic_string< char > > > ) );
-  TrieTestRun( ( TestRemove< DataTrie< char, std::basic_string< char > > > ) );
-  TrieTestRun( ( TestHasString< DataTrie< char, std::basic_string< char > > > ) );
-  TrieTestRun( ( TestNumChildren< DataTrie< char, std::basic_string< char > > > ) );
-  TrieTestRun( ( TestGetAllStrings< DataTrie< char, std::basic_string< char > > > ) );
-  TrieTestRun( ( TestGetAllStringsWithNodes< DataTrie< char, std::basic_string< char > > > ) );
-  TrieTestRun( ( TestDataTrieInsert ) );
-  TrieTestEnd;
+  static std::vector< TestFn > tests
+  {
+    WrapTrieTest( ( TestInsert< Trie< char > > ) ),
+    WrapTrieTest( ( TestFind< Trie< char > > ) ),
+    WrapTrieTest( ( TestRemove< Trie< char > > ) ),
+    WrapTrieTest( ( TestHasString< Trie< char > > ) ),
+    WrapTrieTest( ( TestNumChildren< Trie< char > > ) ),
+    WrapTrieTest( ( TestGetAllStrings< Trie< char > > ) ),
+    WrapTrieTest( ( TestGetAllStringsWithNodes< Trie< char > > ) ),
+    WrapTrieTest( ( TestInsert< DataTrie< char, std::basic_string< char > > > ) ),
+    WrapTrieTest( ( TestFind< DataTrie< char, std::basic_string< char > > > ) ),
+    WrapTrieTest( ( TestRemove< DataTrie< char, std::basic_string< char > > > ) ),
+    WrapTrieTest( ( TestHasString< DataTrie< char, std::basic_string< char > > > ) ),
+    WrapTrieTest( ( TestNumChildren< DataTrie< char, std::basic_string< char > > > ) ),
+    WrapTrieTest( ( TestGetAllStrings< DataTrie< char, std::basic_string< char > > > ) ),
+    WrapTrieTest( ( TestGetAllStringsWithNodes< DataTrie< char, std::basic_string< char > > > ) ),
+    WrapTrieTest( ( TestDataTrieInsert ) )
+  };
+
+  return std::all_of( tests.begin(), tests.end(), []( auto test )
+  {
+    return test();
+  } );
 }
 #pragma endregion
 
