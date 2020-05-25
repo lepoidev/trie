@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Trie\Trie.h"
 #include "Trie\DataTrie.h"
+#include <cassert>
 
 typedef std::function< bool() > TestFn;
 

@@ -67,14 +67,14 @@ public:
     return strings;
   }
 
-  void GetAllStringsWithNodes( std::vector< std::pair< std::basic_string< CharTy >, std::shared_ptr< NodeTy > const > >& stringsWithNodes ) const
+  void GetAllStringsWithNodes( std::vector< typename NodeTy::Pair >& stringsWithNodes ) const
   {
     NodeTy::GetAllStringsWithNodes( m_root, stringsWithNodes );
   }
 
-  std::vector< std::pair< std::basic_string< CharTy >, std::shared_ptr< NodeTy > const > > const GetAllStringsWithNodes() const
+  std::vector< typename NodeTy::Pair > const GetAllStringsWithNodes() const
   {
-    std::vector< std::pair< std::basic_string< CharTy >, std::shared_ptr< NodeTy > const > > stringsWithNodes;
+    std::vector< typename NodeTy::Pair > stringsWithNodes;
     GetAllStringsWithNodes( stringsWithNodes );
     return stringsWithNodes;
   }

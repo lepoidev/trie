@@ -8,12 +8,13 @@
 #include <limits>
 #include <type_traits>
 #include <utility>
-#include <cassert>
 
 template< typename CharTy >
 class TrieNode
 {
 public:
+  typedef std::pair < std::basic_string< CharTy >, std::shared_ptr< TrieNode< CharTy > > const > Pair;
+
   #pragma region Constructors
   TrieNode( CharTy const charVal )
     : m_char { charVal }, m_isEndOfAnEntry { false }, m_numChildren { 0ULL }
@@ -164,7 +165,7 @@ public:
   }
 
   template< typename NodeTy >
-  static void GetAllStringsWithNodes( std::shared_ptr< NodeTy > const& root, std::vector< std::pair< std::basic_string< CharTy >, std::shared_ptr< NodeTy > const > >& stringsWithNodes )
+  static void GetAllStringsWithNodes( std::shared_ptr< NodeTy > const& root, std::vector< typename NodeTy::Pair >& stringsWithNodes )
   {
     static_assert( std::is_base_of< TrieNode< CharTy >, NodeTy >::value, "Must use a TrieNode type" );
 
@@ -239,7 +240,7 @@ protected:
   template< typename NodeTy >
   static void GetAllStringsWithNodes( std::shared_ptr< NodeTy > const& root,
                                       std::basic_string< CharTy > strToRoot,
-                                      std::vector< std::pair< std::basic_string< CharTy >, std::shared_ptr< NodeTy > const > >& stringsWithNodes )
+                                      std::vector< typename NodeTy::Pair >& stringsWithNodes )
   {
     static_assert(std::is_base_of< TrieNode< CharTy >, NodeTy >::value, "Must use a TrieNode type");
 
