@@ -162,6 +162,22 @@ public:
       }
     }
   }
+
+  template< typename NodeTy >
+  static void GetAllStringsWithNodes( std::shared_ptr< NodeTy > const& root, std::vector< std::pair< std::basic_string< CharTy >, std::shared_ptr< NodeTy > const > >& stringsWithNodes )
+  {
+    static_assert( std::is_base_of< TrieNode< CharTy >, NodeTy >::value, "Must use a TrieNode type" );
+
+    std::basic_string< CharTy > intialStr {};
+    for( auto const& child : root->m_children )
+    {
+      auto derived { std::static_pointer_cast< NodeTy >( child ) };
+      if( derived != nullptr )
+      {
+        GetAllStringsWithNodes( derived, intialStr, stringsWithNodes );
+      }
+    }
+  }
   #pragma endregion
 
   size_t const GetNumChildren() const
@@ -199,6 +215,7 @@ protected:
     --m_numChildren;
   }
 
+  #pragma region Private Static Operations
   template< typename NodeTy >
   static void GetAllStrings( std::shared_ptr< NodeTy > const& root, std::basic_string< CharTy > strToRoot, std::vector< std::basic_string< CharTy > >& strings )
   {
@@ -218,4 +235,28 @@ protected:
       }
     }
   }
+
+  template< typename NodeTy >
+  static void GetAllStringsWithNodes( std::shared_ptr< NodeTy > const& root,
+                                      std::basic_string< CharTy > strToRoot,
+                                      std::vector< std::pair< std::basic_string< CharTy >, std::shared_ptr< NodeTy > const > >& stringsWithNodes )
+  {
+    static_assert(std::is_base_of< TrieNode< CharTy >, NodeTy >::value, "Must use a TrieNode type");
+
+    auto strToCurrent { strToRoot + root->m_char };
+    if( root->m_isEndOfAnEntry )
+    {
+      stringsWithNodes.push_back( { strToCurrent, root } );
+    }
+
+    for( auto const& child : root->m_children )
+    {
+      auto derived { std::static_pointer_cast<NodeTy>(child) };
+      if( derived != nullptr )
+      {
+        GetAllStringsWithNodes( derived, strToCurrent, stringsWithNodes );
+      }
+    }
+  }
+  #pragma endregion
 };

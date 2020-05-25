@@ -228,6 +228,8 @@ bool TestGetAllStrings()
   auto actualStrings { trie.GetAllStrings() };
   auto expectedStrings { testData };
 
+  TrieTestAssert( actualStrings.size() == expectedStrings.size() );
+
   std::sort( actualStrings.begin(), actualStrings.end() );
   std::sort( expectedStrings.begin(), expectedStrings.end() );
 
@@ -244,6 +246,49 @@ bool TestGetAllStrings()
   return true;
 }
 
+template< typename TrieTy >
+bool TestGetAllStringsWithNodes()
+{
+  TrieTy trie;
+
+  TrieTestAssert( Populate( trie ) );
+
+  auto actualStringsWithNodes { trie.GetAllStringsWithNodes() };
+  std::vector< std::basic_string< char > > actualStrings;
+  for( auto stringWithNode : actualStringsWithNodes )
+  {
+    actualStrings.push_back( stringWithNode.first );
+  }
+
+  auto expectedStrings { testData };
+
+  TrieTestAssert( actualStrings.size() == expectedStrings.size() );
+
+
+  std::sort( actualStrings.begin(), actualStrings.end() );
+  std::sort( expectedStrings.begin(), expectedStrings.end() );
+
+  for( auto const& str : actualStrings )
+  {
+    TrieTestAssert( std::binary_search( expectedStrings.begin(), expectedStrings.end(), str ) );
+  }
+
+  for( auto const& str : expectedStrings )
+  {
+    TrieTestAssert( std::binary_search( actualStrings.begin(), actualStrings.end(), str ) );
+  }
+
+  auto const totalStrings { actualStrings.size() };
+  for( auto i { totalStrings }; i < totalStrings; ++i )
+  {
+    auto const& expectedNode { trie.Find( expectedStrings[i] ) };
+    auto const& actualNode { actualStringsWithNodes[i].second };
+    TrieTestAssert( expectedNode == actualNode );
+  }
+
+  return true;
+}
+
 bool RunAllTests()
 {
   static std::vector< TestFn > tests
@@ -254,12 +299,14 @@ bool RunAllTests()
     TestHasString< Trie< char > >,
     TestNumChildren< Trie< char > >,
     TestGetAllStrings< Trie< char > >,
+    TestGetAllStringsWithNodes< Trie< char > >,
     TestInsert< DataTrie< char, std::basic_string< char > > >,
     TestFind< DataTrie< char, std::basic_string< char > > >,
     TestRemove< DataTrie< char, std::basic_string< char > > >,
     TestHasString< DataTrie< char, std::basic_string< char > > >,
     TestNumChildren< DataTrie< char, std::basic_string< char > > >,
     TestGetAllStrings< DataTrie< char, std::basic_string< char > > >,
+    TestGetAllStringsWithNodes< DataTrie< char, std::basic_string< char > > >,
     TestDataTrieInsert
   };
 
