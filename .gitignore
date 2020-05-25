@@ -1,4 +1,11 @@
-## 
+## Build related
+CMakeFiles/
+MakeFile
+CMakeCache.txt
+cmake_install.cmake
+*.bin
+
+## VS 
 *.sln
 *.vcxproj
 *.vcxproj.*

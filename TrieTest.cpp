@@ -15,10 +15,10 @@
 */
 
 #ifdef COMPILE_TRIE_TESTS
-#include <iostream>
-#include "Trie\Trie.h"
-#include "Trie\DataTrie.h"
+#include "Trie/Trie.h"
+#include "Trie/DataTrie.h"
 #include <cassert>
+#include <iostream>
 
 typedef std::function< bool() > TestFn;
 
