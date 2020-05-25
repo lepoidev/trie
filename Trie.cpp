@@ -1,3 +1,4 @@
+#ifdef COMPILE_TRIE_TESTS
 #include <iostream>
 #include "Trie\Trie.h"
 #include "Trie\DataTrie.h"
@@ -339,3 +340,4 @@ int main()
 
   return 0;
 }
+#endif // COMPILE_TRIE_TESTS
