@@ -14,7 +14,7 @@ set(COMPILE_DEFS COMPILE_TRIE_TESTS)
 
 include_directories(${TRIE_DIR})
 
-set(TARGET_NAME trieTest.bin)
+set(TARGET_NAME trieTest.out)
 add_executable(${TARGET_NAME} ${SOURCES} ${HEADERS})
 target_compile_definitions(${TARGET_NAME} PRIVATE ${COMPILE_DEFS})
 target_include_directories(${TARGET_NAME} PRIVATE ${TRIE_DIR})
