@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.5.1)
+enable_testing()
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -17,3 +18,5 @@ set(TARGET_NAME trieTest.bin)
 add_executable(${TARGET_NAME} ${SOURCES} ${HEADERS})
 target_compile_definitions(${TARGET_NAME} PRIVATE ${COMPILE_DEFS})
 target_include_directories(${TARGET_NAME} PRIVATE ${TRIE_DIR})
+
+add_test(NAME AllTests COMMAND ${TARGET_NAME})

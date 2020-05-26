@@ -356,12 +356,12 @@ int main()
   if( RunAllTests() )
   {
     std::cout << "Pass\n";
+    return 0;
   }
   else 
   {
     std::cout << "Fail\n";
+    return 1;
   }
-
-  return 0;
 }
 #endif // COMPILE_TRIE_TESTS
