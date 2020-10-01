@@ -37,13 +37,13 @@ public:
   }
 
   DataTrieNode( DataTy const data )
-    : DataTrieNode( (CharTy)0, data )
+    : DataTrieNode( static_cast< CharTy >( 0 ), data )
   {
 
   }
 
   DataTrieNode()
-    : DataTrieNode( (CharTy)0 )
+    : DataTrieNode( static_cast< CharTy >( 0 ) )
   {
 
   }

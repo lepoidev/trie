@@ -29,6 +29,7 @@ template< typename CharTy >
 class TrieNode
 {
 public:
+  static constexpr size_t NumChars = 1ULL << 8ULL * sizeof( CharTy );
   typedef std::pair < std::basic_string< CharTy >, std::shared_ptr< TrieNode< CharTy > > const > Pair;
 
   #pragma region Constructors
@@ -36,9 +37,9 @@ public:
     : m_char { charVal }, m_isEndOfAnEntry { false }, m_numChildren { 0ULL }
   {
     static_assert( std::is_integral< CharTy >::value, "Must use an integral type for CharTy" );
-    m_children.resize( NumChars() );
+    m_children.resize( NumChars );
   }
-  TrieNode() : TrieNode( (CharTy)0 ) {}
+  TrieNode() : TrieNode( static_cast<CharTy>( 0 ) ) {}
   #pragma endregion
 
   #pragma region Static Operations
@@ -46,10 +47,9 @@ public:
   static std::shared_ptr < NodeTy > const CloneSubTrie( NodeTy const& root )
   {
     auto ret { std::make_shared< NodeTy >( root ) };
-    auto const numChars { root.NumChars() };
-    for( auto i { 0ULL }; i < numChars; ++i )
+    for( CharTy c { 0ULL }; c < NumChars; ++c )
     {
-      auto const& rhsChild { root.m_children[i] };
+      auto const& rhsChild { root.GetChild( c ) };
       if( rhsChild != nullptr )
       {
         ret->AddChild( CloneSubTrie( rhsChild ) );
@@ -231,12 +231,8 @@ protected:
   size_t m_numChildren;
   std::vector< std::shared_ptr< TrieNode< CharTy > > > m_children;
 
-  static size_t const NumChars()
-  {
-    return 1ULL << 8ULL * sizeof( CharTy );
-  }
 
-  std::shared_ptr< TrieNode< CharTy > >& GetChild( CharTy const c )
+  std::shared_ptr< TrieNode< CharTy > > const& GetChild( CharTy const c ) const
   {
     return m_children[c];
   }
