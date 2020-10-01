@@ -323,6 +323,49 @@ bool TestGetAllStringsWithNodes()
   return true;
 }
 
+template< typename TrieTy >
+bool TestAssignment()
+{
+  TrieTy t1;
+
+  TrieTestAssert( Populate( t1 ) );
+
+  // Copy
+  TrieTy t2 = t1;
+  TrieTy t3 ( t1 );
+
+  auto t1Strings { t1.GetAllStrings() };
+  auto t2Strings { t2.GetAllStrings() };
+  auto t3Strings { t3.GetAllStrings() };
+
+  t1.Remove( "A" );
+
+  t1Strings = t1.GetAllStrings();
+  t2Strings = t2.GetAllStrings();
+  t2Strings = t3.GetAllStrings();
+
+  TrieTestAssert( t1Strings.size() < t2Strings.size() );
+  TrieTestAssert( t1Strings.size() < t3Strings.size() );
+
+  // Move
+  TrieTy t4;
+  TrieTestAssert( Populate( t4 ) );
+
+  TrieTy t5 = std::move( t2 );
+  TrieTy t6 ( std::move( t4 ) );
+
+  t2Strings = t2.GetAllStrings();
+  auto t4Strings { t4.GetAllStrings() };
+  auto t5Strings { t5.GetAllStrings() };
+  auto t6Strings { t6.GetAllStrings() };
+
+  TrieTestAssert( t2Strings.size() == 0 );
+  TrieTestAssert( t4Strings.size() == 0 );
+  TrieTestAssert( (t5Strings.size() != 0) && (t5Strings.size() == t6Strings.size()) )
+
+  return true;
+}
+
 bool RunAllTests()
 {
   static std::vector< TestFn > tests
@@ -341,7 +384,9 @@ bool RunAllTests()
     WrapTrieTest( ( TestNumChildren< DataTrie< char, std::basic_string< char > > > ) ),
     WrapTrieTest( ( TestGetAllStrings< DataTrie< char, std::basic_string< char > > > ) ),
     WrapTrieTest( ( TestGetAllStringsWithNodes< DataTrie< char, std::basic_string< char > > > ) ),
-    WrapTrieTest( ( TestDataTrieInsert ) )
+    WrapTrieTest( ( TestDataTrieInsert ) ),
+    WrapTrieTest( ( TestAssignment< Trie< char > > ) ),
+    WrapTrieTest( ( TestAssignment< DataTrie< char, std::basic_string< char > > > ) )
   };
 
   return std::all_of( tests.begin(), tests.end(), []( auto test )
