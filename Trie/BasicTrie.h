@@ -21,11 +21,45 @@ template< typename NodeTy, typename CharTy >
 class BasicTrie
 {
 public:
+  #pragma region Constructors
   BasicTrie()
     : m_root { std::make_shared< NodeTy >() }
   {
     static_assert( std::is_base_of< TrieNode< CharTy >, NodeTy >::value, "Must use a TrieNode type" );
   }
+
+  BasicTrie( const BasicTrie& rhs )
+    : BasicTrie()
+  {
+    operator=( rhs );
+  }
+
+  BasicTrie( BasicTrie&& rhs ) noexcept
+    : BasicTrie()
+  {
+    operator=( std::forward<BasicTrie>( rhs ) );
+  }
+  #pragma endregion
+
+  #pragma region Operator Overrides
+  BasicTrie& operator=( BasicTrie const& rhs )
+  {
+    if( &rhs != this )
+    {
+      m_root = NodeTy::CloneSubTrie( rhs.m_root );
+    }
+    return *this;
+  }
+
+  BasicTrie& operator=( BasicTrie&& rhs ) noexcept
+  {
+    if( &rhs != this )
+    {
+      m_root = std::move( rhs.m_root );
+    }
+    return *this;
+  }
+  #pragma endregion
 
   std::shared_ptr< NodeTy > const Insert( std::basic_string< CharTy > str )
   {
@@ -73,7 +107,10 @@ public:
 
   void GetAllStrings( std::vector< std::basic_string< CharTy > >& strings ) const
   {
-    NodeTy::GetAllStrings( m_root, strings );
+    if( m_root != nullptr )
+    {
+      NodeTy::GetAllStrings( m_root, strings );
+    }
   }
 
   std::vector< std::basic_string< CharTy > > const GetAllStrings() const

@@ -42,6 +42,29 @@ public:
   #pragma endregion
 
   #pragma region Static Operations
+  template< typename NodeTy >
+  static std::shared_ptr < NodeTy > const CloneSubTrie( NodeTy const& root )
+  {
+    auto ret { std::make_shared< NodeTy >( root ) };
+    auto const numChars { root.NumChars() };
+    for( auto i { 0ULL }; i < numChars; ++i )
+    {
+      auto const& rhsChild { root.m_children[i] };
+      if( rhsChild != nullptr )
+      {
+        ret->AddChild( CloneSubTrie( rhsChild ) );
+      }
+    }
+
+    return std::move( ret );
+  }
+
+  template< typename NodeTy >
+  static std::shared_ptr < NodeTy > const CloneSubTrie( std::shared_ptr< NodeTy > const& root )
+  {
+    return (root == nullptr) ? nullptr : CloneSubTrie( *root );
+  }
+
   template< typename NodeTy, typename IterTy >
   static std::shared_ptr < NodeTy > const Find( std::shared_ptr< NodeTy > const& root, IterTy&& begin, IterTy&& end )
   {
